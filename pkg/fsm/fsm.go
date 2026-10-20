@@ -75,7 +75,7 @@ func (m *Machine[T]) Terminal(states ...State) *Machine[T] {
 // FallbackTo registers a deterministic escape hatch. When the handler of state returns an error, the machine
 // moves to target instead of aborting.
 func (m *Machine[T]) FallbackTo(state, target State) *Machine[T] {
-	m.fallbacks[target] = state
+	m.fallbacks[state] = target
 	return m
 }
 
