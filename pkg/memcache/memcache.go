@@ -114,7 +114,6 @@ func (c *Cache[V]) Close() error {
 	return nil
 }
 
-
 func (c *Cache[V]) janitor(every time.Duration) {
 	ticker := time.NewTicker(every)
 	defer ticker.Stop()
@@ -127,12 +126,12 @@ func (c *Cache[V]) janitor(every time.Duration) {
 			now := c.now()
 			for _, s := range c.shards {
 				s.mu.Lock()
-				defer s.mu.Unlock()
 				for k, v := range s.items {
 					if now.After(v.expiresAt) {
 						delete(s.items, k)
 					}
 				}
+				s.mu.Unlock()
 			}
 		}
 	}
