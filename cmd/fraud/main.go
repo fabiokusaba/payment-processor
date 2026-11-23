@@ -49,8 +49,13 @@ func run(logger *slog.Logger) error {
 	logger.Info("model loaded", slog.String("version", model.Version))
 
 	var geo usecase.GeoResolver
-	geo = infra.NewHTTPGeoResolver()
-	logger.Info("using static geo resolver")
+	if config.String("GEO_PROVIDER", "static") == "ipapi" {
+		geo = infra.NewHTTPGeoResolver()
+		logger.Info("using ipapi geo resolver")
+	} else {
+		geo = infra.NewStaticGeoResolver()
+		logger.Info("using static geo resolver")
+	}
 
 	pipeline := usecase.NewPipeline(
 		model,
